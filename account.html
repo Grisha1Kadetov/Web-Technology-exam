@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Личный кабинет — Lingua</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/common.css" />
+</head>
+
+<body>
+    <header class="site-header py-2">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand d-flex align-items-center me-4" href="index.html">
+                    <img src="assets/logo.png" alt="Лого" width="40" class="me-2 site-logo" />
+                </a>
+                <nav class="site-nav">
+                    <ul class="navbar-nav flex-row gap-4 mb-0">
+                        <li class="nav-item"><a class="nav-link" href="courses.html">Курсы</a></li>
+                        <li class="nav-item"><a class="nav-link" href="tutors.html">Репетиторы</a></li>
+                        <li class="nav-item"><a class="nav-link active fw-bold" href="account.html">Личный кабинет</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#contacts">Контакты</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- УВЕДОМЛЕНИЕ -->
+    <section class="notification-area py-2" id="global-notifications">
+        <div class="container">
+            <p class="mb-0">Здесь отображаются уведомления сервиса</p>
+        </div>
+    </section>
+
+    <!-- ЗАЯВКИ -->
+    <main class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="main-text mb-0">Личный кабинет</h1>
+                <div><button id="refresh-orders" class="btn-secondary-custom">Обновить</button></div>
+            </div>
+
+            <div class="table-responsive mb-3">
+                <table class="table align-middle" id="orders-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Курс / Репетитор</th>
+                            <th>Дата</th>
+                            <th>Время</th>
+                            <th>Стоимость, ₽</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody"></tbody>
+                </table>
+            </div>
+
+            <nav>
+                <ul class="pagination" id="orders-pagination"></ul>
+            </nav>
+        </div>
+    </main>
+    
+    <!-- ПОДРОБНЕЕ -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="details-title" class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div id="details-body" class="modal-body"></div>
+                <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- РЕДАКТ ЗАЯВКИ НА КУРС -->
+    <div class="modal fade" id="editCourseModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование заявки на курс</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-course-form">
+                        <div class="mb-3"><label class="form-label">Курс</label><input id="edit-course-name"
+                                class="form-control" readonly></div>
+                        <div class="mb-3"><label class="form-label">Преподаватель</label><input id="edit-course-tutor"
+                                class="form-control" readonly></div>
+                        <div class="mb-3"><label class="form-label">Дата начала</label><input id="edit-course-date"
+                                type="date" class="form-control" required></div>
+                        <div class="mb-3"><label class="form-label">Время</label><select id="edit-course-time"
+                                class="form-select" required></select></div>
+                        <div class="mb-3"><label class="form-label">Количество студентов</label><input
+                                id="edit-course-persons" type="number" class="form-control" min="1" max="20" required>
+                        </div>
+
+                        <fieldset class="mb-3">
+                            <legend class="fs-6">Опции</legend>
+                            <div class="form-check"><input id="edit-course-supplementary" class="form-check-input"
+                                    type="checkbox"><label class="form-check-label">Дополн. материалы</label></div>
+                            <div class="form-check"><input id="edit-course-personalized" class="form-check-input"
+                                    type="checkbox"><label class="form-check-label">Индивидуальные занятия</label></div>
+                            <div class="form-check"><input id="edit-course-excursions" class="form-check-input"
+                                    type="checkbox"><label class="form-check-label">Экскурсии</label></div>
+                            <div class="form-check"><input id="edit-course-assessment" class="form-check-input"
+                                    type="checkbox"><label class="form-check-label">Оценка уровня</label></div>
+                            <div class="form-check"><input id="edit-course-interactive" class="form-check-input"
+                                    type="checkbox"><label class="form-check-label">Онлайн-платформа</label></div>
+                        </fieldset>
+
+                        <div class="mb-3"><strong>Итоговая стоимость: <span id="edit-course-total">0</span> ₽</strong>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button id="save-course-edit" class="btn-primary-custom">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- РЕДАКТ ЗАЯВКИ К РЕПЕТИТОРУ -->
+    <div class="modal fade" id="editTutorModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование заявки к репетитору</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-tutor-form">
+                        <div class="mb-3"><label class="form-label">Репетитор</label><input id="edit-tutor-name"
+                                class="form-control" readonly></div>
+                        <div class="mb-3"><label class="form-label">Продолжительность (часы)</label><input
+                                id="edit-tutor-duration" type="number" min="1" max="40" class="form-control" required>
+                        </div>
+                        <div class="mb-3"><label class="form-label">Дата</label><input id="edit-tutor-date" type="date"
+                                class="form-control" required></div>
+                        <div class="mb-3"><label class="form-label">Время</label><select id="edit-tutor-time"
+                                class="form-select" required></select></div>
+                        <div class="mb-3"><label class="form-label">Email</label><input id="edit-tutor-email"
+                                type="email" class="form-control"></div>
+                        <div class="mb-3"><label class="form-label">Сообщение</label><textarea id="edit-tutor-message"
+                                rows="3" class="form-control"></textarea></div>
+                        <div class="mb-3"><strong>Итоговая стоимость: <span id="edit-tutor-total">0</span> ₽</strong>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button id="save-tutor-edit" class="btn-primary-custom">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="mb-3">Вы уверены, что хотите удалить заявку?</p>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                        <button id="confirm-delete-btn" class="btn-primary-custom">Да</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer class="site-footer py-5" id="contacts">
+        <div class="container">
+    
+            <div class="row gy-4">
+                <div class="col-md-4">
+                    <h5 class="text-white fw-bold mb-2">
+                        Lingua
+                    </h5>
+                    <p class="mb-3">
+                        Полезная языковая школа.
+                    </p>
+    
+                    <div class="d-flex gap-3">
+                        <a href="https://web.telegram.org/">
+                            Telegram
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                            YouTube
+                        </a>
+                    </div>
+                </div>
+    
+                <div class="col-md-4">
+                    <h6 class="text-white fw-bold mb-3">
+                        Контакты
+                    </h6>
+    
+                    <p class="mb-0">
+                        г. Москва, ул. Караганда, 6
+                    </p>
+                    <p class="pb-1">
+                        Пн–Пт: 9:00–21:00<br>
+                        Сб–Вс: 10:00–18:00
+                    </p>
+                    <p class="mb-0">
+                        +7 (900) 000-00-00
+                    </p>
+                    <p class="mb-0">
+                        info@lingua.ru
+                    </p>
+                </div>
+    
+                <div class="col-md-4">
+                    <h6 class="text-white fw-bold mb-3">
+                        Полезные ссылки
+                    </h6>
+    
+                    <ul class="list-unstyled">
+                        <li class="mb-1">
+                            <a href="courses.html">
+                                Все курсы
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="tutors.html">
+                                Все репетиторы
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="account.html">
+                                Личный кабинет
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+    
+            </div>
+    
+            <div class="border-top border-secondary mt-4 pt-3 text-center small">
+                © 2026 Lingua
+            </div>
+    
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/account.js"></script>
+</body>
+
+</html>
