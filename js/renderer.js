@@ -1,8 +1,8 @@
+// не актулаьный файл, был разделен на api.js, courses.js и tutors.js
 const API_URL =
-    "http://exam-api-courses.std-900.ist.mospolytech.ru/api/courses";
+    "http://exam-api-courses.std-900.ist.mospolytech.ru/api/";
 const API_KEY =
     "0c882bbd-5f5c-4a2b-848c-eb5fca826a2b";
-
 const COURSES_PER_PAGE = 6;
 
 let allCourses = [];
@@ -10,16 +10,32 @@ let visibleCourses = [];
 let currentPage = 1;
 let selectedCourseForOrder = null;
 
+let allTutors = [];
+let filteredTutors = [];
+let selectedTutorId = null;
+let selectedTutor = null;
 
 async function fetchCourses() {
     const response = await fetch(
-        `${API_URL}?api_key=${API_KEY}`
+        `${API_URL}courses?api_key=${API_KEY}`
     );
 
     allCourses = await response.json();
     visibleCourses = allCourses;
 
     render();
+}
+
+async function fetchTutors() {
+    const response = await fetch(
+        `${API_URL}tutors?api_key=${API_KEY}`
+    );
+
+    allTutors = await response.json();
+    filteredTutors = allTutors;
+
+    fillTutorLanguages();
+    renderTutors();
 }
 
 function applyFilters() {
@@ -169,6 +185,76 @@ function openCourseModal(course) {
     modal.show();
 }
 
+function renderTutors() {
+    const container =
+        document.getElementById("tutors-container");
+
+    container.innerHTML = "";
+
+    filteredTutors.forEach(tutor => {
+        const col = document.createElement("div");
+        col.className = "col-md-6 mb-3";
+
+        col.innerHTML = `
+            <div class="card tutor-card h-100" data-id="${tutor.id}">
+                <div class="card-body d-flex gap-3">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/4519/4519678.png"
+                        class="tutor-photo rounded"
+                        alt="Фото"
+                    >
+                    <div>
+                        <h5 class="mb-1">${tutor.name}</h5>
+                        <p class="mb-1">
+                            Уровень: ${tutor.language_level}
+                        </p>
+                        <p class="mb-1">
+                            Языки: ${tutor.languages_offered.join(", ")}
+                        </p>
+                        <p class="mb-1">
+                            Опыт: ${tutor.work_experience} лет
+                        </p>
+                        <p class="fw-bold mb-0">
+                            ${tutor.price_per_hour} ₽ / час
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        col
+            .querySelector(".tutor-card")
+            .addEventListener("click", () =>
+                toggleTutorSelection(tutor.id)
+            );
+
+        container.appendChild(col);
+    });
+}
+
+function toggleTutorSelection(id) {
+    const cards =
+        document.querySelectorAll(".tutor-card");
+
+    cards.forEach(card => {
+        card.classList.remove("selected");
+    });
+
+    if (selectedTutorId === id) {
+        selectedTutorId = null;
+        document.getElementById("order-tutor-btn").disabled = true;
+        return;
+    }
+
+    selectedTutorId = id;
+
+    document
+        .querySelector(`.tutor-card[data-id="${id}"]`)
+        .classList.add("selected");
+
+    document.getElementById("order-tutor-btn").disabled = false;
+}
+
 function openCourseOrderModal(course) {
     document.getElementById("order-course-name").value =
         course.name;
@@ -204,6 +290,8 @@ function openCourseOrderModal(course) {
     ).show();
 }
 
+//как я понял Опции заказа применяються только для курсов,
+//для репетиторов нет такого
 function calculateCoursePrice() {
     if (!selectedCourseForOrder) return;
 
@@ -326,7 +414,103 @@ function calculateCoursePrice() {
         Math.round(price * persons);
 }
 
+function fillTutorLanguages() {
+    const select =
+        document.getElementById("tutor-language");
 
+    const languages = new Set();
+
+    allTutors.forEach(tutor =>
+        tutor.languages_offered.forEach(lang =>
+            languages.add(lang)
+        )
+    );
+
+    languages.forEach(lang => {
+        const option = document.createElement("option");
+        option.value = lang;
+        option.textContent = lang;
+        select.appendChild(option);
+    });
+}
+
+function filterTutors() {
+    const language =
+        document.getElementById("tutor-language").value;
+
+    const level =
+        document.getElementById("tutor-level").value;
+
+    filteredTutors = allTutors.filter(tutor => {
+        const byLanguage = language
+            ? tutor.languages_offered.includes(language)
+            : true;
+
+        const byLevel = level
+            ? tutor.language_level === level
+            : true;
+
+        return byLanguage && byLevel;
+    });
+
+    selectedTutorId = null;
+    document.getElementById("order-tutor-btn").disabled = true;
+
+    renderTutors();
+}
+
+function openTutorOrderModal(tutor) {
+    selectedTutor = tutor;
+
+    document.getElementById("tutor-name").value =
+        tutor.name;
+
+    document.getElementById("tutor-price").value =
+        `${tutor.price_per_hour} ₽ / час`;
+
+    document.getElementById("tutor-duration").value = 1;
+    document.getElementById("tutor-date").value = "";
+    document.getElementById("tutor-email").value = "";
+    document.getElementById("tutor-message").value = "";
+
+    fillTutorTimes();
+    calculateTutorPrice();
+
+    new bootstrap.Modal(
+        document.getElementById("tutorOrderModal")
+    ).show();
+}
+
+function fillTutorTimes() {
+    const select =
+        document.getElementById("tutor-time");
+
+    select.innerHTML = "";
+
+    for (let h = 9; h <= 20; h++) {
+        const time = `${String(h).padStart(2, "0")}:00`;
+        select.innerHTML +=
+            `<option value="${time}">${time}</option>`;
+    }
+}
+
+function calculateTutorPrice() {
+    if (!selectedTutor) return;
+
+    let hours =
+        Number(document.getElementById("tutor-duration").value);
+
+    if (isNaN(hours) || hours < 1) hours = 1;
+    if (hours > 40) hours = 40;
+
+    document.getElementById("tutor-duration").value = hours;
+
+    const price =
+        hours * selectedTutor.price_per_hour;
+
+    document.getElementById("tutor-total-price").textContent =
+        price;
+}
 
 function clearOrderNotifications() {
     const box = document.getElementById("order-notifications");
@@ -347,6 +531,91 @@ function addOrderNotification(text) {
     box.style.display = "block";
 }
 
+document
+    .getElementById("submit-tutor-order")
+    .addEventListener("click", async () => {
+
+        const data = {
+            tutor_id: selectedTutor.id,
+            date_start:
+                document.getElementById("tutor-date").value,
+            time_start:
+                document.getElementById("tutor-time").value,
+            duration:
+                Number(
+                    document.getElementById("tutor-duration").value
+                ),
+            price:
+                Number(
+                    document.getElementById("tutor-total-price").textContent
+                ),
+            persons: 1
+        };
+
+        try {
+            const response = await fetch(
+                `${API_URL}orders?api_key=${API_KEY}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error();
+            }
+
+            bootstrap
+                .Modal
+                .getInstance(
+                    document.getElementById("tutorOrderModal")
+                )
+                .hide();
+
+            document
+                .getElementById("tutor-order-form")
+                .reset();
+
+            alert("Заявка отправлена!");
+
+        } catch {
+            alert("Ошибка отправки заявки");
+        }
+    });
+
+
+document
+    .getElementById("tutor-duration")
+    .addEventListener("blur", e => {
+        let value = Number(e.target.value);
+
+        if (isNaN(value) || value < 1) value = 1;
+        if (value > 40) value = 40;
+
+        e.target.value = value;
+        calculateTutorPrice();
+    });
+
+document
+    .getElementById("order-tutor-btn")
+    .addEventListener("click", () => {
+        selectedTutor =
+            allTutors.find(t => t.id === selectedTutorId);
+
+        openTutorOrderModal(selectedTutor);
+    });
+
+
+document
+    .getElementById("tutor-language")
+    .addEventListener("change", filterTutors);
+
+document
+    .getElementById("tutor-level")
+    .addEventListener("change", filterTutors);
 
 document
     .querySelectorAll(
@@ -398,7 +667,7 @@ document
 
         try {
             const response = await fetch(
-                `${API_URL.replace("/courses", "/orders")}?api_key=${API_KEY}`,
+                `${API_URL}/orders?api_key=${API_KEY}`,
                 {
                     method: "POST",
                     headers: {
@@ -412,10 +681,8 @@ document
                 throw new Error("Ошибка отправки заявки");
             }
 
-            /* закрываем модальное окно */
             modal.hide();
 
-            /* сбрасываем форму */
             document
                 .getElementById("course-order-form")
                 .reset();
@@ -496,8 +763,7 @@ document
         calculateCoursePrice();
     });
 
-
-
 fetchCourses();
+fetchTutors();
 // извените что не декопозировал код, хотелось по быстрее сделать, 
 // хотя (даже смотря на название js файла) такая идея была

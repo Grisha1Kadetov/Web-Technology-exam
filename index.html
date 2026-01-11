@@ -28,6 +28,9 @@
                             <a class="nav-link" href="courses.html">Курсы</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="tutors.html">Репетиторы</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#">Личный кабинет</a>
                         </li>
                         <li class="nav-item">
@@ -40,7 +43,8 @@
     </header>
 
 
-    <!-- ОБЛАСТЬ УВЕДОМЛЕНИЙ -->
+    <!-- ОБЛАСТЬ УВЕДОМЛЕНИЙ 
+     (в реальном мире сообщение бы подтягивалось через api, как я думаю)-->
     <section class="notification-area py-2">
         <div class="container">
             <p class="mb-0">
@@ -48,6 +52,103 @@
             </p>
         </div>
     </section>
+
+    <!-- МОДАЛЬНОЕ ОКНО ЗАЯВКИ НА РЕПЕТИТОРА -->
+    <div class="modal fade" id="tutorOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+    
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Запись к репетитору
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+    
+                <div class="modal-body">
+                    <form id="tutor-order-form">
+    
+                        <!-- РЕПЕТИТОР -->
+                        <div class="mb-3">
+                            <label class="form-label">Репетитор</label>
+                            <input type="text" class="form-control" id="tutor-name" readonly>
+                        </div>
+    
+                        <!-- СТАВКА -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Почасовая ставка
+                            </label>
+                            <input type="text" class="form-control" id="tutor-price" readonly>
+                        </div>
+    
+                        <!-- ПРОДОЛЖИТЕЛЬНОСТЬ -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Продолжительность (часов)
+                            </label>
+                            <input type="number" class="form-control" id="tutor-duration" min="1" max="40" value="1"
+                                required>
+                        </div>
+    
+                        <!-- ДАТА -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Дата занятия
+                            </label>
+                            <input type="date" class="form-control" id="tutor-date" required>
+                        </div>
+    
+                        <!-- ВРЕМЯ -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Время начала
+                            </label>
+                            <select class="form-select" id="tutor-time" required></select>
+                        </div>
+    
+                        <!-- EMAIL -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Email для связи
+                            </label>
+                            <input type="email" class="form-control" id="tutor-email" required>
+                        </div>
+    
+                        <!-- СООБЩЕНИЕ -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Сообщение
+                            </label>
+                            <textarea class="form-control" id="tutor-message" rows="3"></textarea>
+                        </div>
+    
+                        <!-- СТОИМОСТЬ -->
+                        <div class="mb-3">
+                            <strong>
+                                Итоговая стоимость:
+                                <span id="tutor-total-price">0</span> ₽
+                            </strong>
+                        </div>
+    
+                    </form>
+                </div>
+    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Отмена
+                    </button>
+    
+                    <button type="button" class="btn-primary-custom" id="submit-tutor-order">
+                        Отправить заявку
+                    </button>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+
 
     <!--  МОДАЛЬНОЕ ОКНО КУРСА -->
     <div class="modal fade" id="courseModal" tabindex="-1">
@@ -310,65 +411,122 @@
     </section>
     
     <!-- СПИСОК РЕПЕТИТОРОВ -->
-    <section class="py-5">
+    <section class="py-5" id="tutors">
         <div class="container">
             <h2 class="mb-4 main-text">Наши репетиторы</h2>
-    
-            <!-- Поиск репетиторов -->
-            <form class="row g-3 mb-4">
-                <div class="col-md-5">
-                    <select class="form-select">
-                        <option selected>Квалификация</option>
-                        <option>CELTA</option>
-                        <option>Магистр лингвистики</option>
+
+            <!-- ПОИСК -->
+            <form class="row g-3 mb-4" id="tutor-search-form">
+                <div class="col-md-6">
+                    <select class="form-select" id="tutor-language">
+                        <option value="">Язык обучения</option>
                     </select>
                 </div>
-    
-                <div class="col-md-4">
-                    <input type="number" class="form-control" placeholder="Опыт (лет)">
-                </div>
-    
-                <div class="col-md-3">
-                    <button class="btn-primary-custom w-100">
-                        Применить
-                    </button>
+
+                <div class="col-md-6">
+                    <select class="form-select" id="tutor-level">
+                        <option value="">Уровень языка</option>
+                        <option value="Beginner">Начальный</option>
+                        <option value="Intermediate">Средний</option>
+                        <option value="Advanced">Продвинутый</option>
+                    </select>
                 </div>
             </form>
-    
-            <ul class="list-group">
-                <li class="list-group-item">
-                    Анна Иванова — английский язык, 5 лет опыта
-                </li>
-                <li class="list-group-item">
-                    Марк Шульц — немецкий язык, 8 лет опыта
-                </li>
-                <li class="list-group-item">
-                    София Дюпон — французский язык, 6 лет опыта
-                </li>
-            </ul>
-    
-            <!-- КНОПКА ЗАКАЗА -->
-            <div class="mt-4">
-                <button class="btn-primary-custom">
-                    Оставить заявку
+
+            <!-- СПИСОК -->
+            <div class="row" id="tutors-container"></div>
+
+            <!-- КНОПКА -->
+            <div class="mt-4 text-end">
+                <button class="btn-primary-custom" id="order-tutor-btn" disabled>
+                    Заказать занятия
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- ФУТЕР -->
-    <footer class="bg-dark text-white py-5" id="contacts">
-        <div class="container px-3">
 
-            <p class="mb-1">© 2026 Lingua</p>
-            <p class="m-0 p-0 fw-bold">Контакты</p>
-            <p class="m-0 p-0">Email: info@lingua.ru</p>
-            <p class="m-0 p-0">Телефон: +7 (900) 000-00-00</p>
+    <!-- ФУТЕР -->
+    <footer class="site-footer py-5" id="contacts">
+        <div class="container">
+    
+            <div class="row gy-4">
+                <div class="col-md-4">
+                    <h5 class="text-white fw-bold mb-2">
+                        Lingua
+                    </h5>
+                    <p class="mb-3">
+                        Полезная языковая школа.
+                    </p>
+    
+                    <div class="d-flex gap-3">
+                        <a href="https://web.telegram.org/">
+                            Telegram
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                            YouTube
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h6 class="text-white fw-bold mb-3">
+                        Контакты
+                    </h6>
+    
+                    <p class="mb-0">
+                        г. Москва, ул. Караганда, 6
+                    </p>
+                    <p class="pb-1">
+                        Пн–Пт: 9:00–21:00<br>
+                        Сб–Вс: 10:00–18:00
+                    </p>
+                    <p class="mb-0">
+                        +7 (900) 000-00-00
+                    </p>
+                    <p class="mb-0">
+                        info@lingua.ru
+                    </p>
+                </div>
+    
+                <div class="col-md-4">
+                    <h6 class="text-white fw-bold mb-3">
+                        Полезные ссылки
+                    </h6>
+    
+                    <ul class="list-unstyled">
+                        <li class="mb-1">
+                            <a href="courses.html">
+                                Все курсы
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="tutors.html">
+                                Все репетиторы
+                            </a>
+                        </li>
+                        <li class="mb-1">
+                            <a href="#">
+                                Личный кабинет
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+    
+            </div>
+
+            <div class="border-top border-secondary mt-4 pt-3 text-center small">
+                © 2026 Lingua
+            </div>
+    
         </div>
     </footer>
+
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/renderer.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/tutors.js"></script>
+    <script src="js/courses.js"></script>
 </body>
 
 </html>

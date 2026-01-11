@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Курсы — Lingua</title>
+    <title>Lingua — Репетиторы</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap 5.3 -->
@@ -14,6 +14,7 @@
 </head>
 
 <body>
+
     <!-- ШАПКА -->
     <header class="site-header py-2">
         <div class="container">
@@ -21,20 +22,26 @@
                 <a class="navbar-brand d-flex align-items-center me-4" href="index.html">
                     <img src="assets/logo.png" alt="Лого" width="40" class="me-2 site-logo">
                 </a>
-    
+
                 <nav class="site-nav">
                     <ul class="navbar-nav flex-row gap-4 mb-0">
                         <li class="nav-item">
-                            <a class="nav-link active fw-bold" href="courses.html">Курсы</a>
+                            <a class="nav-link" href="courses.html">
+                                Курсы
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="tutors.html">Репетиторы</a>
+                            <a class="nav-link active fw-bold" href="tutors.html">
+                                Репетиторы
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Личный кабинет</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#contacts">Контакты</a>
+                            <a class="nav-link" href="#contacts">
+                                Контакты
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -42,208 +49,143 @@
         </div>
     </header>
 
-    <!-- ОБЛАСТЬ УВЕДОМЛЕНИЙ -->
+    <!-- УВЕДОМЛЕНИЕ -->
     <section class="notification-area py-2">
         <div class="container">
             <p class="mb-0">
-                Выберите подходящий курс и оставьте заявку
+                Открыта запись на индивидуальные занятия с репетиторами!
             </p>
         </div>
     </section>
 
-    <!-- ПОИСК КУРСОВ -->
-    <section class="py-5">
+    <!-- РЕПЕТИТОРЫ -->
+    <section class="py-5" id="tutors">
         <div class="container">
-            <h1 class="mb-4 main-text">Языковые курсы</h1>
+            <h1 class="mb-4 main-text">
+                Репетиторы Lingua
+            </h1>
 
-            <form class="row g-3" id="course-search-form">
-                <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Название курса" id="search-name">
+            <!-- ПОИСК -->
+            <form class="row g-3 mb-4" id="tutor-search-form">
+                <div class="col-md-6">
+                    <select class="form-select" id="tutor-language">
+                        <option value="">Язык обучения</option>
+                    </select>
                 </div>
 
-                <div class="col-md-4">
-                    <select class="form-select" id="search-level">
-                        <option value="">Уровень</option>
+                <div class="col-md-6">
+                    <select class="form-select" id="tutor-level">
+                        <option value="">Уровень языка</option>
                         <option value="Beginner">Начальный</option>
                         <option value="Intermediate">Средний</option>
                         <option value="Advanced">Продвинутый</option>
                     </select>
                 </div>
-
-                <div class="col-md-2">
-                    <button type="submit" class="btn-primary-custom w-100">
-                        Найти
-                    </button>
-                </div>
-
-                <div class="col-md-2">
-                    <button type="button" class="btn-secondary-custom w-100" id="reset-search">
-                        Сброс
-                    </button>
-                </div>
             </form>
-        </div>
-    </section>
 
-    <!-- СПИСОК КУРСОВ -->
-    <section class="courses-section py-5">
-        <div class="container">
+            <!-- СПИСОК РЕПЕТИТОРОВ -->
+            <div class="row" id="tutors-container"></div>
 
-            <div class="row" id="courses-container"></div>
-
-            <!-- ПАГИНАЦИЯ -->
-            <nav class="mt-4">
-                <ul class="pagination" id="courses-pagination"></ul>
-            </nav>
-        </div>
-    </section>
-
-    <!-- МОДАЛЬНОЕ ОКНО КУРСА -->
-    <div class="modal fade" id="courseModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title" id="courseModalTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body" id="courseModalBody"></div>
-
-                <div class="modal-footer">
-                    <button class="btn-primary-custom" id="courseEnrollButton" data-course-id="">
-                        Оставить заявку
-                    </button>
-                </div>
-
+            <!-- КНОПКА ЗАКАЗА -->
+            <div class="mt-4 text-end">
+                <button class="btn-primary-custom" id="order-tutor-btn" disabled>
+                    Заказать занятия
+                </button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- МОДАЛЬНОЕ ОКНО ЗАЯВКИ НА КУРС -->
-    <div class="modal fade" id="courseOrderModal" tabindex="-1">
+    <!-- МОДАЛЬНОЕ ОКНО ЗАЯВКИ НА РЕПЕТИТОРА -->
+    <div class="modal fade" id="tutorOrderModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
-
+    
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        Заявка на языковой курс
+                        Запись к репетитору
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
+    
                 <div class="modal-body">
-                    <form id="course-order-form">
-
+                    <form id="tutor-order-form">
+    
+                        <!-- РЕПЕТИТОР -->
                         <div class="mb-3">
-                            <label class="form-label">Курс</label>
-                            <input type="text" class="form-control" id="order-course-name" readonly>
+                            <label class="form-label">Репетитор</label>
+                            <input type="text" class="form-control" id="tutor-name" readonly>
                         </div>
-
+    
+                        <!-- СТАВКА -->
                         <div class="mb-3">
                             <label class="form-label">
-                                Преподаватель
+                                Почасовая ставка
                             </label>
-                            <input type="text" class="form-control" id="order-course-teacher" readonly>
+                            <input type="text" class="form-control" id="tutor-price" readonly>
                         </div>
-
+    
+                        <!-- ПРОДОЛЖИТЕЛЬНОСТЬ -->
                         <div class="mb-3">
                             <label class="form-label">
-                                Дата начала
+                                Продолжительность (часов)
                             </label>
-                            <select class="form-select" id="order-date-start" required></select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Время занятий
-                            </label>
-                            <select class="form-select" id="order-time-start" disabled required></select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Продолжительность
-                            </label>
-                            <input type="text" class="form-control" id="order-duration-info" readonly>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Количество студентов
-                            </label>
-                            <input type="number" class="form-control" id="order-persons" min="1" max="20" value="1"
+                            <input type="number" class="form-control" id="tutor-duration" min="1" max="40" value="1"
                                 required>
                         </div>
-
-                        <fieldset class="mb-3">
-                            <legend class="fs-6">
-                                Дополнительные опции
-                            </legend>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="supplementary">
-                                <label class="form-check-label">
-                                    Дополнительные материалы
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="personalized">
-                                <label class="form-check-label">
-                                    Индивидуальные занятия
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="excursions">
-                                <label class="form-check-label">
-                                    Культурные экскурсии
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="assessment">
-                                <label class="form-check-label">
-                                    Оценка уровня
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="interactive">
-                                <label class="form-check-label">
-                                    Онлайн-платформа
-                                </label>
-                            </div>
-                        </fieldset>
-
+    
+                        <!-- ДАТА -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Дата занятия
+                            </label>
+                            <input type="date" class="form-control" id="tutor-date" required>
+                        </div>
+    
+                        <!-- ВРЕМЯ -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Время начала
+                            </label>
+                            <select class="form-select" id="tutor-time" required></select>
+                        </div>
+    
+                        <!-- EMAIL -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Email для связи
+                            </label>
+                            <input type="email" class="form-control" id="tutor-email" required>
+                        </div>
+    
+                        <!-- СООБЩЕНИЕ -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Сообщение
+                            </label>
+                            <textarea class="form-control" id="tutor-message" rows="3"></textarea>
+                        </div>
+    
+                        <!-- СТОИМОСТЬ -->
                         <div class="mb-3">
                             <strong>
                                 Итоговая стоимость:
-                                <span id="order-total-price">0</span> ₽
+                                <span id="tutor-total-price">0</span> ₽
                             </strong>
                         </div>
-
+    
                     </form>
-
-                    <!-- УВЕДОМЛЕНИЯ -->
-                    <div class="notification-area py-2 mb-3" id="order-notifications" style="display: none;">
-                        <div class="container">
-                            <ul class="mb-0 ps-3" id="order-notification-list"></ul>
-                        </div>
-                    </div>
                 </div>
-
+    
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Отмена
                     </button>
-
-                    <button type="button" class="btn-primary-custom" id="submit-course-order">
+    
+                    <button type="button" class="btn-primary-custom" id="submit-tutor-order">
                         Отправить заявку
                     </button>
                 </div>
-
+    
             </div>
         </div>
     </div>
@@ -326,7 +268,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/courses.js"></script>
+    <script src="js/tutors.js"></script>
 </body>
 
 </html>

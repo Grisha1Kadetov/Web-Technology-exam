@@ -4,6 +4,7 @@
 
     /* Оттенки основного цвета */
     --color-primary-light: rgb(96, 170, 255);
+    --color-primary-very-dark: rgb(9, 28, 53);
     --color-primary-dark: rgb(38, 108, 200);
     --color-primary-soft: rgba(64, 144, 246, 0.1);
 
@@ -154,12 +155,6 @@ h5 {
     color: #ffffff;
 }
 
-/* РЕПЕТИТОРЫ */
-.list-group-item {
-    border-radius: var(--border-radius);
-    margin-bottom: 10px;
-}
-
 /* КАРТОЧКИ КУРСОВ */
 .course-card {
     margin-bottom: 24px;
@@ -171,13 +166,49 @@ h5 {
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
+/* РЕПЕТИТОРЫ */
+.tutor-card {
+    cursor: pointer;
+    border: 2px solid var(--color-primary);
+    border-color: var(--color-bg-light);
+    border-radius: var(--border-radius);
+    transition: box-shadow 0.2s ease;
+}
+
+.tutor-card.selected {
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(64, 144, 246, 0.25);
+}
+
+.list-group-item {
+    border-radius: var(--border-radius);
+    margin-bottom: 10px;
+}
+
+.tutor-photo {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
 /* ФУТЕР */
 .site-footer {
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-primary-very-dark);
     color: #ffffff;
 }
 
 .site-footer a {
-    color: #ffffff;
+    color: var(--color-text-muted);
     text-decoration: underline;
+    transition: color var(--transition-base);
 }
+
+.site-footer a:hover {
+    color: var(--color-primary-dark);
+}
+
+.site-footer p {
+    color: var(--color-text-muted);
+}
+
