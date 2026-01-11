@@ -2,6 +2,8 @@
 Выполнил: Кадетов Григорий Евгеньевич 241-326
 
 Для просмотра сайта, склонируйте репозиторий и откройте в браузере `index.html`.
+Так же сайт залит на github pages, но он блокирует запросы к api, поэтому это не полная версия сайта.
+[https://grisha1kadetov.github.io/Web-Technology-exam/](https://grisha1kadetov.github.io/Web-Technology-exam/)
 ## Основной функционал
 
 - Просмотр языковых курсов
