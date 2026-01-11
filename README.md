@@ -104,21 +104,8 @@
 
 Пример для телефонов:
 
-<style>
-.image-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin: 20px 0;
-}
-
-.image-grid img {
-    width: 100%;
-}
-</style>
-
-<div class="image-grid">
-    <img src="screenshots/adapt1.png" alt="Личный кабинет">
-    <img src="screenshots/adapt2.png" alt="Просмотр заявки">
-    <img src="screenshots/adapt3.png" alt="Редактирование заявки">
+<div class="image-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0;" >
+    <img style="width: 100%;" src="screenshots/adapt1.png" alt="Личный кабинет">
+    <img style="width: 100%;" src="screenshots/adapt2.png" alt="Просмотр заявки">
+    <img style="width: 100%;" src="screenshots/adapt3.png" alt="Редактирование заявки">
 </div>
