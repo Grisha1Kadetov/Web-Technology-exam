@@ -1,0 +1,183 @@
+:root {
+    /* Основной цвет */
+    --color-primary: rgb(64, 144, 246);
+
+    /* Оттенки основного цвета */
+    --color-primary-light: rgb(96, 170, 255);
+    --color-primary-dark: rgb(38, 108, 200);
+    --color-primary-soft: rgba(64, 144, 246, 0.1);
+
+    /* Фоны */
+    --color-bg-main: #ffffff;
+    --color-bg-light: #f5f8fc;
+    --color-bg-accent: rgba(64, 144, 246, 0.08);
+
+    /* Текст */
+    --color-text-main: #1f2933;
+    --color-text-muted: #6b7280;
+
+    /* Прочее */
+    --border-radius: 12px;
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
+}
+
+/* ОБЩЕЕ */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 600;
+}
+
+.main-text {
+    color: var(--color-primary-dark);
+}
+
+/* ШАПКА */
+.site-header {
+    background-color: var(--color-bg-main);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.site-logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.site-nav .nav-item {
+    color: var(--color-text-main);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+.site-nav a:hover {
+    color: var(--color-primary);
+}
+
+/* ОБЛАСТЬ УВЕДОМЛЕНИЙ */
+.notification-area {
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary-dark);
+}
+
+/* БЛОК ОПИСАНИЯ */
+.section-description {
+    background-color: var(--color-bg-main);
+}
+
+/* ПРЕИМУЩЕСТВА */
+.advantages-section {
+    background-color: var(--color-bg-light);
+}
+
+.advantage-card {
+    background-color: var(--color-bg-main);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    border-left: 5px solid var(--color-primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    transition:
+        transform var(--transition-base),
+        box-shadow var(--transition-base);
+}
+
+.advantage-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(64, 144, 246, 0.25);
+}
+
+.advantage-card h5 {
+    color: var(--color-primary-dark);
+}
+
+/* КНОПКИ */
+.btn-primary-custom {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 10px 18px;
+    transition: background-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary-custom {
+    background-color: var(--color-bg-main);
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: 10px 18px;
+    transition: background-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.btn-secondary-custom:hover {
+    background-color: var(--color-primary-soft);
+    transform: translateY(-1px);
+}
+
+/* КУРСЫ */
+.courses-section {
+    background-color: var(--color-bg-light);
+}
+
+.card {
+    border: none;
+}
+
+/* ПАГИНАЦИЯ */
+.pagination .page-link {
+    color: var(--color-primary);
+}
+
+.pagination .active .page-link {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
+}
+
+/* РЕПЕТИТОРЫ */
+.list-group-item {
+    border-radius: var(--border-radius);
+    margin-bottom: 10px;
+}
+
+/* КАРТОЧКИ КУРСОВ */
+.course-card {
+    margin-bottom: 24px;
+    border-radius: var(--border-radius);
+    transition: box-shadow var(--transition-base);
+}
+
+.course-card:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* ФУТЕР */
+.site-footer {
+    background-color: var(--color-primary-dark);
+    color: #ffffff;
+}
+
+.site-footer a {
+    color: #ffffff;
+    text-decoration: underline;
+}
